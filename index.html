@@ -88,7 +88,8 @@
             <img class="f1" src="img/15.png" />
             <img class="f1" src="img/16.png" />
             <img class="f1" src="img/1.png" />
-
+ <img class="f1" src="img/17.png" />
+            <img class="f1" src="img/18.png" />
             <img class="f1" src="img/7.png" />
             <img class="f1" src="img/5.png" />
             <img class="f1" src="img/6.png" />
@@ -103,8 +104,7 @@
             <img class="f1" src="img/6.png" />
             <img class="f1" src="img/11.png" />
 
-            <img class="f1" src="img/17.png" />
-            <img class="f1" src="img/18.png" />
+           
 
             <img class="f1" src="img/24.png" />
             <img class="f1" src="img/25.png" />
@@ -193,78 +193,96 @@
     </div>
 
     <script type="text/javascript">
-        var oImg = document.getElementsByClassName('f1');
-        var oImg2 = document.getElementsByClassName('f2');
-        var oImg3 = document.getElementsByClassName('f3');
-        var len = oImg.length;
-        var deg = 360 / len;
+    var oImg = document.getElementsByClassName('f1');
+    var oImg2 = document.getElementsByClassName('f2');
+    var oImg3 = document.getElementsByClassName('f3');
+    var len = oImg.length;
+    var deg = 360 / len;
+    var oWrap = document.getElementById("imgwrap");
 
-        var oWrap = document.getElementById("imgwrap");
-
-        // Shuffle function
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
-            }
+    // Shuffle function
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
         }
+    }
 
-        // Shuffle the image arrays
-        shuffleArray(oImg);
-        shuffleArray(oImg2);
-        shuffleArray(oImg3);
+    // Shuffle the image arrays
+    shuffleArray(oImg);
+    shuffleArray(oImg2);
+    shuffleArray(oImg3);
 
-        // 页面加载完毕在执行的代码
-        window.onload = function () {
-            Array.prototype.forEach.call(oImg, function (ele, index) {
-                // 旋转并沿Z轴平移
-                ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px)";
-                //过渡时间1s
-                ele.style.transition = "1s " + (len - index) * 0.1 + "s";
-            });
+    // 页面加载完毕在执行的代码
+    window.onload = function () {
+        Array.prototype.forEach.call(oImg, function (ele, index) {
+            ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px)";
+            ele.style.transition = "1s " + (len - index) * 0.1 + "s";
+        });
 
-            Array.prototype.forEach.call(oImg2, function (ele, index) {
-                // 旋转并沿Z轴平移
-                ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px) translateY(240px)";
-                //过渡时间1s
-                ele.style.transition = "1s " + (len - index) * 0.1 + "s";
-            });
+        Array.prototype.forEach.call(oImg2, function (ele, index) {
+            ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px) translateY(240px)";
+            ele.style.transition = "1s " + (len - index) * 0.1 + "s";
+        });
 
-            Array.prototype.forEach.call(oImg3, function (ele, index) {
-                // 旋转并沿Z轴平移
-                ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px) translateY(480px)";
-                //过渡时间1s
-                ele.style.transition = "1s " + (len - index) * 0.1 + "s";
-            });
-        };
+        Array.prototype.forEach.call(oImg3, function (ele, index) {
+            ele.style.transform = "rotateY(" + deg * index + "deg) translateZ(645.75px) translateY(480px)";
+            ele.style.transition = "1s " + (len - index) * 0.1 + "s";
+        });
+    };
 
-        //翻动3D相册
-        var newX, newY, lastX, lastY, minusX, minusY, rotX = -20, rotY = 0;
+    // 翻动3D相册（鼠标 + 触屏）
+    var newX, newY, lastX, lastY, minusX, minusY, rotX = -20, rotY = 0;
 
-        document.onmousedown = function (e) {
-            // 点击设置初值
+    function startDrag(e) {
+        e.preventDefault(); // 阻止默认行为（滚动等）
+
+        if (e.type === "mousedown") {
             lastX = e.clientX;
             lastY = e.clientY;
+        } else if (e.type === "touchstart") {
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+        }
 
-            this.onmousemove = function (e) {
+        function moveHandler(e) {
+            if (e.type === "mousemove") {
                 newX = e.clientX;
                 newY = e.clientY;
-                minusX = newX - lastX;
-                minusY = newY - lastY;
+            } else if (e.type === "touchmove") {
+                newX = e.touches[0].clientX;
+                newY = e.touches[0].clientY;
+            }
 
-                rotX -= minusY * 0.2;
-                rotY += minusX * 0.1;
-                oWrap.style.transform = "rotateX(" + rotX + "deg) rotateY(" + rotY + "deg)";
-                lastX = newX;
-                lastY = newY;
-            };
+            minusX = newX - lastX;
+            minusY = newY - lastY;
 
-            this.onmouseup = function (e) {
-                //鼠标松开
-                this.onmousemove = null; //清除鼠标移动
-            };
-        };
-    </script>
+            rotX -= minusY * 0.2;
+            rotY += minusX * 0.1;
+            oWrap.style.transform = "rotateX(" + rotX + "deg) rotateY(" + rotY + "deg)";
+
+            lastX = newX;
+            lastY = newY;
+        }
+
+        function endHandler() {
+            document.removeEventListener("mousemove", moveHandler);
+            document.removeEventListener("mouseup", endHandler);
+            document.removeEventListener("touchmove", moveHandler);
+            document.removeEventListener("touchend", endHandler);
+        }
+
+        document.addEventListener("mousemove", moveHandler);
+        document.addEventListener("mouseup", endHandler);
+        document.addEventListener("touchmove", moveHandler, { passive: false });
+        document.addEventListener("touchend", endHandler);
+    }
+
+    // 鼠标和触屏都绑定
+    oWrap.addEventListener("mousedown", startDrag);
+    oWrap.addEventListener("touchstart", startDrag, { passive: false });
+</script>
+
 </body>
 
 </html>
